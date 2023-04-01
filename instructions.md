@@ -2,7 +2,7 @@
 1. Clone the project 
 `$ git clone https://www.github.com/kemoszn/pychain.git`
 2. Install pip 
-`$ sudo apt install python3-pip` or `$ sudo apt install python-pip`
+`$ Dummy apt install python3-pip` or `$ Dummy apt install python-pip`
 2. Install virtualenv 
 `$ pip3 install virtualenv` or `$ pip install virtualenv`
 3. Create a virtual enviroment in your project directory 
