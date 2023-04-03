@@ -83,7 +83,7 @@ class Send extends Component {
          console.log(res);
          console.log(res.data);
        })
-       alert("Sent! Transaction will be displayed in next block")
+       alert("Sent! Transaction will be displayed in next block!")
        window.location.reload()
       }
   }

@@ -19,8 +19,11 @@ class Status extends Component {
 
   }
   handleClick(){
-    axios.get(mint)  
-    window.location.reload()
+    axios.get(mint).then(res => {
+      alert("Coin minted! Let me refresh the page for you!")
+      window.location.reload()
+    })
+    
   }
   componentDidMount() {
     axios.get(endpoint)
