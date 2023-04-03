@@ -10,8 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 import requests #New
 import logging
 node_address = str(uuid4()).replace('-', '') #New
-
-
 class Blockchain:
 
     def __init__(self):
@@ -54,9 +52,25 @@ class Blockchain:
     def hash(self, block):
         encoded_block = json.dumps(block, sort_keys = True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
-
-    def is_chain_valid(self, chain):
     
+    def is_chain_valid(self, chain):
+        previous_block = self.get_last_block()
+        previous_index = previous_block['index']
+        
+        block_index = 1
+        while block_index < len(chain):
+            if(previous_index+1 != self.chain[+1-1]):
+                return False       
+        #     block = chain[block_index]
+        #     if block['previous_hash'] != self.hash(previous_block):
+        #         return False
+        #     previous_nonce = previous_block['nonce']
+        #     nonce = block['nonce']
+        #     hash_operation = hashlib.sha256(str(nonce**2 - previous_nonce**2).encode()).hexdigest()
+        #     if hash_operation[:4] != '0000':
+        #         return False
+        #     previous_block = block
+        #     block_index += 1
         return True
 
     def add_transaction(self, id, txIns, txOuts): #New
@@ -85,16 +99,19 @@ class Blockchain:
         self_time = self.chain[0]['timestamp']
         for node in network:
             response = requests.get(f'http://{node}/get_chain')
-            if response.status_code == 200:
+            if response.status_code == 200 :
                 length = response.json()['length']
                 chain = response.json()['chain']
                 time  = response.json()['chain'][0]['timestamp']
-
-                # logging.warning(time)
-                # logging.warning(self.chain[0]['timestamp'])
-                # logging.warning(datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%S.%f"))
-                # logging.warning(datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%S.%f") < self.chain[0]['timestamp'])
-                if length > max_length and self.is_chain_valid(chain):
+                dateTime= self.chain[0]['timestamp']>datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%S.%f")
+                logging.warning(node)
+       #
+                logging.warning((dateTime))
+               # logging.warning(datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%S.%f") < self.chain[0]['timestamp'])
+                if length > max_length :
+                    max_length = length
+                    longest_chain = chain
+                if dateTime :
                     max_length = length
                     longest_chain = chain
                 # if datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%S.%f") < self.chain[0]['timestamp']:
@@ -119,8 +136,6 @@ def mine_block(request):
         previous_nonce = previous_block['nonce']
         nonce = blockchain.proof_of_work(previous_nonce)
         previous_hash = previous_block['hash']
-        #blockchain.add_transaction(id=hashlib.sha256((previous_block['transactions'][0]['id']+node_address+"50").encode()).hexdigest(),txIns={"txOutId":previous_block['transactions'][0]['id'],"txOutIndex":previous_block['index'],"signature":"sign("+node_address+")"},txOut={
-
         blockchain.add_transaction(id=hashlib.sha256((previous_block['transactions'][0]['id']+node_address+"50").encode()).hexdigest(),txIns="",txOuts={
             "address":node_address,
             "amount":50

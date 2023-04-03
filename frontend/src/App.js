@@ -23,6 +23,7 @@ class App extends Component {
   }
   componentWillMount() {
     axios.get(replace)
+    axios.get(replace)
     axios.post(connect, { 
       "nodes":["http://127.0.0.1:8002","http://127.0.0.1:8001","http://127.0.0.1:8000"
     ]      
